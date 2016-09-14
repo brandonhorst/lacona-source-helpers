@@ -1,0 +1,51 @@
+{
+  "name": "lacona-source-helpers",
+  "version": "1.0.0",
+  "description": "Helper functions to make building Addons with sources easier",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "mocha --compilers jsx:babel-register",
+    "build": "babel src --out-dir lib",
+    "clean": "rimraf lib",
+    "prepublish": "npm run clean && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brandonhorst/lacona-source-helpers.git"
+  },
+  "keywords": [
+    "lacona",
+    "source",
+    "helpers"
+  ],
+  "author": "Brandon Horst",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/brandonhorst/lacona-source-helpers/issues"
+  },
+  "homepage": "https://github.com/brandonhorst/lacona-source-helpers#readme",
+  "devDependencies": {
+    "babel-cli": "^6.14.0",
+    "babel-plugin-syntax-async-functions": "^6.13.0",
+    "babel-plugin-transform-async-to-generator": "^6.8.0",
+    "babel-plugin-transform-function-bind": "^6.8.0",
+    "babel-preset-es2015-node": "^6.1.1",
+    "babel-register": "^6.14.0",
+    "mocha": "^3.0.2",
+    "rimraf": "^2.5.4",
+    "sinon": "^1.17.5"
+  },
+  "babel": {
+    "presets": [
+      "es2015-node"
+    ],
+    "plugins": [
+      "transform-function-bind",
+      "transform-async-to-generator",
+      "syntax-async-functions"
+    ]
+  },
+  "dependencies": {
+    "rxjs": "^5.0.0-beta.12"
+  }
+}
