@@ -1,6 +1,6 @@
 {
   "name": "lacona-source-helpers",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Helper functions to make building Addons with sources easier",
   "main": "lib/index.js",
   "scripts": {
