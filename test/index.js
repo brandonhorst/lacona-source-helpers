@@ -1,4 +1,3 @@
-import {Observable} from 'rxjs/observable'
 import {fromPromise} from 'rxjs/observable/fromPromise'
 
 import {onActivate, onFetch} from '../src'
