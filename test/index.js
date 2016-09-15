@@ -1,11 +1,11 @@
 import {Observable} from 'rxjs/observable'
 import {fromPromise} from 'rxjs/observable/fromPromise'
 
-import {onActivate} from '../src'
+import {onActivate, onFetch} from '../src'
 import sinon, {spy} from 'sinon'
 
 describe('lacona-source-helpers', () => {
-  describe('promiseOnActivate', () => {
+  describe('onActivate', () => {
     it('calls promiseFunction on fetch and on activate', async () => {
       const promiseSpy = spy(function promise() {})
       const resultSpy = spy(function result() {})
@@ -34,6 +34,29 @@ describe('lacona-source-helpers', () => {
         activateSpy, 
         promiseSpy,
         resultSpy.withArgs(1))
+    })
+  })
+
+  describe('onFetch', () => {
+    it('calls promiseFunction on fetch', async () => {
+      const promiseSpy = spy(function promise() {})
+      const resultSpy = spy(function result() {})
+
+      function promiseFunction () {
+        promiseSpy()
+        return Promise.resolve(1)
+      }
+
+      const source = onFetch(promiseFunction, 2)
+
+      const observable = source.fetch()
+      await observable.forEach(resultSpy)
+
+      sinon.assert.callOrder(
+        promiseSpy,
+        resultSpy.withArgs(2),
+        resultSpy.withArgs(1)
+      )
     })
   })
 })

@@ -3,18 +3,22 @@ import {mergeMap} from 'rxjs/operator/mergeMap'
 import {startWith} from 'rxjs/operator/startWith'
 import {fromPromise} from 'rxjs/observable/fromPromise'
 
-module.exports = {
-  // Takes a function that returns a Promise
-  // Returns a source that calls that function on fetch and on every Activate
-  onActivate (promiseFunction, initial = null) {
-    return {
-      fetch ({activate}) {
-        return fromPromise(promiseFunction())::concat(
-          activate::mergeMap(() => {
-            return fromPromise(promiseFunction())
-          })
-        )::startWith(initial)
-      }
+export function onActivate (promiseFunction, initial = null) {
+  return {
+    fetch ({activate}) {
+      return fromPromise(promiseFunction())::concat(
+        activate::mergeMap(() => {
+          return fromPromise(promiseFunction())
+        })
+      )::startWith(initial)
+    }
+  }
+}
+
+export function onFetch (promiseFunction, initial = null) {
+  return {
+    fetch () {
+      return fromPromise(promiseFunction())::startWith(initial)
     }
   }
 }
