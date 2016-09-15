@@ -5,8 +5,8 @@ import {fromPromise} from 'rxjs/observable/fromPromise'
 
 export function onActivate (promiseFunction, initial = null) {
   return {
-    fetch ({activate}) {
-      return fromPromise(promiseFunction())::concat(
+    fetch ({activate, props}) {
+      return fromPromise(promiseFunction(props))::concat(
         activate::mergeMap(() => {
           return fromPromise(promiseFunction())
         })
@@ -17,8 +17,8 @@ export function onActivate (promiseFunction, initial = null) {
 
 export function onFetch (promiseFunction, initial = null) {
   return {
-    fetch () {
-      return fromPromise(promiseFunction())::startWith(initial)
+    fetch ({props}) {
+      return fromPromise(promiseFunction(props))::startWith(initial)
     }
   }
 }

@@ -11,9 +11,9 @@ describe('lacona-source-helpers', () => {
       const resultSpy = spy(function result() {})
       const activateSpy = spy(function activate() {})
 
-      function promiseFunction () {
+      function promiseFunction (props) {
         promiseSpy()
-        return Promise.resolve(1)
+        return Promise.resolve(props)
       }
 
       const source = onActivate(promiseFunction, 2) 
@@ -24,7 +24,7 @@ describe('lacona-source-helpers', () => {
         }, 0)
       }))
 
-      const observable = source.fetch({activate})
+      const observable = source.fetch({activate, props: 1})
       await observable.forEach(resultSpy)
 
       sinon.assert.callOrder(
@@ -42,14 +42,14 @@ describe('lacona-source-helpers', () => {
       const promiseSpy = spy(function promise() {})
       const resultSpy = spy(function result() {})
 
-      function promiseFunction () {
+      function promiseFunction (props) {
         promiseSpy()
-        return Promise.resolve(1)
+        return Promise.resolve(props)
       }
 
       const source = onFetch(promiseFunction, 2)
 
-      const observable = source.fetch()
+      const observable = source.fetch({props: 1})
       await observable.forEach(resultSpy)
 
       sinon.assert.callOrder(
