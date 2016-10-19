@@ -11,9 +11,13 @@ import {of as ofObservable} from 'rxjs/observable/of'
 export function onActivate (promiseFunction, initial = null, clear) {
   return {
     fetch (element) {
-      return fromPromise(promiseFunction(element))::concat(
+      return fromPromise(
+        Promise.resolve(promiseFunction(element))
+      )::concat(
         element.activate::mergeMap(() => {
-          return fromPromise(promiseFunction(element))
+          return fromPromise(
+            Promise.resolve(promiseFunction(element))
+          )
         })
       )::startWith(initial)
     },
@@ -24,7 +28,9 @@ export function onActivate (promiseFunction, initial = null, clear) {
 export function onFetch (promiseFunction, initial = null, clear = true) {
   return {
     fetch (element) {
-      return fromPromise(promiseFunction(element))::startWith(initial)
+      return fromPromise(
+        Promise.resolve(promiseFunction(element))
+      )::startWith(initial)
     },
     clear
   }
@@ -43,7 +49,8 @@ export function onTriggerAfterActivate (promiseFunction, initial = null, clear) 
           return tap::first()
         })
         ::switchMap(() => {
-          return promiseFunction(element).then((data) => ({trigger, data}))
+          return Promise.resolve(promiseFunction(element))
+            .then((data) => ({trigger, data}))
         })
         ::startWith({trigger, data: initial})
     },
@@ -54,11 +61,12 @@ export function onTriggerAfterActivate (promiseFunction, initial = null, clear) 
 export function everyInterval (promiseFunction, ms, initial = null, clear) {
   return {
     fetch (element) {
-      return fromPromise(promiseFunction(element))
-        ::concat(interval(ms)::mergeMap(() => {
-          return fromPromise(promiseFunction(element))
-        }))
-        ::startWith(initial)
+      return fromPromise(
+        Promise.resolve(promiseFunction(element))
+      )::concat(interval(ms)::mergeMap(() => {
+        return Promise.resolve(fromPromise(promiseFunction(element)))
+      }))
+      ::startWith(initial)
     }
   }
 }
