@@ -4,15 +4,16 @@ import {switchMap} from 'rxjs/operator/switchMap'
 import {first} from 'rxjs/operator/first'
 import {startWith} from 'rxjs/operator/startWith'
 import {fromPromise} from 'rxjs/observable/fromPromise'
+import {interval} from 'rxjs/observable/interval'
 import {Observable} from 'rxjs/Observable'
 import {of as ofObservable} from 'rxjs/observable/of'
 
 export function onActivate (promiseFunction, initial = null, clear) {
   return {
-    fetch ({activate, props}) {
-      return fromPromise(promiseFunction(props))::concat(
-        activate::mergeMap(() => {
-          return fromPromise(promiseFunction())
+    fetch (element) {
+      return fromPromise(promiseFunction(element))::concat(
+        element.activate::mergeMap(() => {
+          return fromPromise(promiseFunction(element))
         })
       )::startWith(initial)
     },
@@ -22,8 +23,8 @@ export function onActivate (promiseFunction, initial = null, clear) {
 
 export function onFetch (promiseFunction, initial = null, clear = true) {
   return {
-    fetch ({props}) {
-      return fromPromise(promiseFunction(props))::startWith(initial)
+    fetch (element) {
+      return fromPromise(promiseFunction(element))::startWith(initial)
     },
     clear
   }
@@ -31,21 +32,33 @@ export function onFetch (promiseFunction, initial = null, clear = true) {
 
 export function onTriggerAfterActivate (promiseFunction, initial = null, clear) {
   return {
-    fetch ({activate, props}) {
+    fetch (element) {
       let tapObserver
       const tap = new Observable(observer => { tapObserver = observer })
       const trigger = () => tapObserver.next()
 
       return ofObservable(true)
-        ::concat(activate)
+        ::concat(element.activate)
         ::mergeMap(() => {
           return tap::first()
         })
         ::switchMap(() => {
-          return promiseFunction(props).then((data) => ({trigger, data}))
+          return promiseFunction(element).then((data) => ({trigger, data}))
         })
         ::startWith({trigger, data: initial})
     },
     clear
+  }
+}
+
+export function everyInterval (promiseFunction, ms, initial = null, clear) {
+  return {
+    fetch (element) {
+      return fromPromise(promiseFunction(element))
+        ::concat(interval(ms)::mergeMap(() => {
+          return fromPromise(promiseFunction(element))
+        }))
+        ::startWith(initial)
+    }
   }
 }

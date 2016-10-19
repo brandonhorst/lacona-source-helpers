@@ -10,7 +10,7 @@ describe('lacona-source-helpers', () => {
       const resultSpy = spy(function result() {})
       const activateSpy = spy(function activate() {})
 
-      function promiseFunction (props) {
+      function promiseFunction ({props}) {
         promiseSpy()
         return Promise.resolve(props)
       }
@@ -41,7 +41,7 @@ describe('lacona-source-helpers', () => {
       const promiseSpy = spy(function promise() {})
       const resultSpy = spy(function result() {})
 
-      function promiseFunction (props) {
+      function promiseFunction ({props}) {
         promiseSpy()
         return Promise.resolve(props)
       }
@@ -66,7 +66,7 @@ describe('lacona-source-helpers', () => {
       const activateSpy = spy(function activate() {})
       const triggerSpy = spy(function trigger() {})
 
-      function promiseFunction (props) {
+      function promiseFunction ({props}) {
         promiseSpy()
         return Promise.resolve(props)
       }
