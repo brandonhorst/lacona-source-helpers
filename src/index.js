@@ -64,7 +64,7 @@ export function everyInterval (promiseFunction, ms, initial = null, clear) {
       return fromPromise(
         Promise.resolve(promiseFunction(element))
       )::concat(interval(ms)::mergeMap(() => {
-        return Promise.resolve(fromPromise(promiseFunction(element)))
+        return fromPromise(Promise.resolve(promiseFunction(element)))
       }))
       ::startWith(initial)
     }
